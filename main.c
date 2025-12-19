@@ -3,15 +3,21 @@
 #include <string.h>
 #include <time.h>
 
+// Game constants
+#define STARTING_BALANCE 100
+#define BET_COST 20
+#define JACKPOT_PAYOUT 200
+#define TWO_MATCH_PAYOUT 50
+
 int main(void)
 {
     char play;
     const char *symbols[] = {"🍒","🍋","🔔","💎","𝟕","🍀"};
     const int symbol_count = sizeof(symbols) / sizeof(symbols[0]);
     char choice;
-    int bet = 20;       // cost per spin
-    int balance = 100;  // Starting balance
-    int highscore = balance;      // highsore for session
+    int bet = BET_COST;       // cost per spin
+    int balance = STARTING_BALANCE;  // Starting balance
+    int highscore = balance;      // highest balance for session
     
     
     srand(time(NULL));
@@ -37,24 +43,27 @@ int main(void)
         printf ("\nSpinning...\n\n");
         printf("| %s | %s | %s |\n\n", symbols[i1], symbols[i2], symbols[i3]);
 
-        int chance = rand() % 100 + 1; // Random number between 1 and 100
+        // Deduct bet first
+        balance -= bet;
 
-        if ( chance <= 5 && symbols[i1] == symbols[i2] && symbols[i2] == symbols[i3]) {
-            printf("🎉 JACKPOT! You won! +200T 🎉\n");
-            balance += 200;
-            balance -= bet;
-            highscore += 200;
+        // Check for wins based on actual symbol matches
+        if (symbols[i1] == symbols[i2] && symbols[i2] == symbols[i3]) {
+            printf("🎉 JACKPOT! You won! +%dT 🎉\n", JACKPOT_PAYOUT);
+            balance += JACKPOT_PAYOUT;
         }
-        else if (chance <= 15 && (symbols[i1] == symbols[i2] || symbols[i2] == symbols[i3] || symbols[i1] == symbols[i3])) {
-            printf("😊 You got a two matching! You win +50T ! 😊\n");
-            balance += 50;
-            balance -= bet;
-            highscore += 50;
+        else if (symbols[i1] == symbols[i2] || symbols[i2] == symbols[i3] || symbols[i1] == symbols[i3]) {
+            printf("😊 You got two matching! You win +%dT! 😊\n", TWO_MATCH_PAYOUT);
+            balance += TWO_MATCH_PAYOUT;
         }
         else {
             printf("😞 No match this time. Try again! 😞\n");
-            balance -= bet;
         }        
+        // Update highscore if current balance is higher
+        if (balance > highscore) 
+        {
+            highscore = balance;
+        }
+
         printf("New Balance: %dT\n", balance);
         printf("Your Current Highscore is: %dT\n", highscore);
 
@@ -65,12 +74,14 @@ int main(void)
             break;
         }
 
-        if (balance > highscore) 
-        {
-            highscore = balance;
-        }
         printf("\nPlay again? (y/n): ");
         scanf(" %c", &choice);
+
+        // Input validation
+        while (choice != 'y' && choice != 'Y' && choice != 'n' && choice != 'N') {
+            printf("Invalid input. Please enter 'y' or 'n': ");
+            scanf(" %c", &choice);
+        }
 
     } while (choice == 'y' || choice == 'Y');
     printf("\nThanks for playing!👋\n");
