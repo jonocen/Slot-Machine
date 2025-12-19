@@ -6,14 +6,15 @@
 int main(void)
 {
     char play;
-    const char *symbols[ ] = {"🍒","🍋","🔔","💎","𝟕","🍀"};
+    const char *symbols[] = {"🍒","🍋","🔔","💎","𝟕","🍀"};
     const int symbol_count = sizeof(symbols) / sizeof(symbols[0]);
     char choice;
     int bet = 20;       // cost per spin
     int balance = 100;  // Starting balance
     int highscore = balance;      // highsore for session
-
-    srand((unsigned int)time(NULL));
+    
+    
+    srand(time(NULL));
     printf("🎰Welcome to the Slot Machine!🎰\n");
     printf("You have a starting balance of %dT.\n", balance);
     printf("Each spin costs %dT.\n", bet);
@@ -53,9 +54,7 @@ int main(void)
         else {
             printf("😞 No match this time. Try again! 😞\n");
             balance -= bet;
-        }
-
-        
+        }        
         printf("New Balance: %dT\n", balance);
         printf("Your Current Highscore is: %dT\n", highscore);
 
@@ -63,7 +62,6 @@ int main(void)
         {
             printf("You run out of tokens. Game over! 💀\n");
             printf("Your Session Highscore was: %dT\n", highscore);
-        
             break;
         }
 
@@ -71,15 +69,10 @@ int main(void)
         {
             highscore = balance;
         }
-
         printf("\nPlay again? (y/n): ");
         scanf(" %c", &choice);
 
     } while (choice == 'y' || choice == 'Y');
-
-    printf("\nThanks for playing! 👋\n");
-    
-
-    //      0 ... 999,999 / 6= 0,1,2,3,4,5
+    printf("\nThanks for playing!👋\n");
     return 0;
 }
